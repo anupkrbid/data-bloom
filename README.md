@@ -1,2 +1,2 @@
-# interactive-data-visualizer
-Interactive Data Visualizer
+# data-bloom
+Data Bloom
