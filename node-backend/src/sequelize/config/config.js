@@ -6,6 +6,7 @@ module.exports = {
   dialect: process.env.DB_DIALECT,
   port: Number(process.env.DB_PORT),
   logging: console.log
+  // logging: (...msg) => console.log(msg) // Displays all log function call parameters
   // dialectOptions: {
   //   ssl: {
   //     require: false,

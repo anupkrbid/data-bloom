@@ -5,11 +5,11 @@ const app = require('./app');
 
 (async () => {
   try {
-    await sequelize.authenticate();
+    // await sequelize.authenticate();
 
-    console.log('Database authenticated successfully.');
+    // console.log('Database authenticated successfully.');
 
-    await sequelize.sync();
+    await sequelize.sync({ force: true });
 
     console.log('Database connected successfully.');
 

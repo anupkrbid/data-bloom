@@ -1,7 +1,7 @@
+const { ResponseError } = require('../utils');
+
 module.exports.badRequestMiddleware = (req, res, next) => {
-  const error = new Error('Bad Request');
-  error.status = 404;
-  next(error);
+  next(new ResponseError('Bad Request', 404));
 };
 
 module.exports.anyErrorMiddleware = (err, req, res, next) => {

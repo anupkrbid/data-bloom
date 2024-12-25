@@ -1,25 +1,25 @@
 // https://sequelize.org/v3/docs/models-definition/
 
-const { sequelize, Sequelize } = require('../config');
+const { sequelize, DataTypes } = require('../config');
 
 const User = sequelize.define(
   'user',
   {
     id: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       primaryKey: true,
       allowNull: false,
       autoIncrement: true
     },
     name: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
         nonEmpty: true
       }
     },
     email: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       unique: true,
       allowNull: false,
       validate: {
@@ -27,9 +27,17 @@ const User = sequelize.define(
         isEmail: true
       }
     },
-    password: {
-      type: Sequelize.STRING,
+    passwordHash: {
+      type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        nonEmpty: true
+      }
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
       validate: {
         nonEmpty: true
       }

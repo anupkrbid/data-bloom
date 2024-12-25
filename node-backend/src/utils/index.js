@@ -1,3 +1,5 @@
 module.exports = {
-  ...require('./helper')
+  ...require('./helper'),
+  ...require('./password'),
+  ...require('./error-response')
 };
