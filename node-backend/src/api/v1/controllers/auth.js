@@ -24,7 +24,7 @@ exports.signUp = async (req, res, next) => {
 
       const newSession = await Session.create({}, { transaction: t });
 
-      newSession.setUser(newUser);
+      await newSession.setUser(newUser);
 
       return { session: newSession, user: newUser };
     });
@@ -65,10 +65,7 @@ exports.signIn = async (req, res, next) => {
       throw new ResponseError('Authentication failed.', 401);
     }
 
-    const newSession = user.createSession();
-
-    // const newSession = await Session.create({});
-    // newSession.addUser(user);
+    const newSession = await user.createSession();
 
     res.status(200).json({
       status: true,
@@ -88,14 +85,16 @@ exports.signIn = async (req, res, next) => {
 };
 
 exports.signOut = async (req, res, next) => {
-  // const token = req.session.uuid;
-  await req.session.destroy();
-  // awaitSession.destroy({ where: { uuid: token } });
-  res.status(200).json({
-    status: true,
-    message: 'Sign out successful',
-    data: null
-  });
+  try {
+    await req.session.destroy();
+    res.status(200).json({
+      status: true,
+      message: 'Sign out successful',
+      data: null
+    });
+  } catch (err) {
+    next(new ResponseError(err.message));
+  }
 };
 
 exports.isEmailAvailable = async (req, res, next) => {
@@ -106,13 +105,13 @@ exports.isEmailAvailable = async (req, res, next) => {
     });
     if (isDefinedAndNotNull(user)) {
       res.status(200).json({
-        status: true,
-        message: 'Email is available'
+        status: false,
+        message: 'Email is not available'
       });
     } else {
       res.status(200).json({
-        status: false,
-        message: 'Email is not available'
+        status: true,
+        message: 'Email is available'
       });
     }
   } catch (err) {

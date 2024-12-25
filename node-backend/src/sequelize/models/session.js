@@ -18,7 +18,8 @@ const Session = sequelize.define(
         Date.now() + Number(process.env.SESSION_EXPIRY) * 1000
       ),
       validate: {
-        nonEmpty: true
+        isDate: true,
+        notEmpty: true
       }
     }
   },

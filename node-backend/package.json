@@ -4,6 +4,7 @@
   "description": "An Interactive Data Visualization Dashboard",
   "main": "src/server.js",
   "scripts": {
+    "start": "node src/server.js",
     "serve": "nodemon src/server.js",
     "seed": "npx -r dotenv/config sequelize-cli db:seed:all",
     "test": "echo \"Error: no test specified\" && exit 1"

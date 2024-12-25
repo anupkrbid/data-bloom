@@ -9,7 +9,7 @@ const app = require('./app');
 
     // console.log('Database authenticated successfully.');
 
-    await sequelize.sync({ force: true });
+    await sequelize.sync();
 
     console.log('Database connected successfully.');
 

@@ -15,7 +15,7 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        nonEmpty: true
+        notEmpty: true
       }
     },
     email: {
@@ -23,7 +23,7 @@ const User = sequelize.define(
       unique: true,
       allowNull: false,
       validate: {
-        nonEmpty: true,
+        notEmpty: true,
         isEmail: true
       }
     },
@@ -31,7 +31,7 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        nonEmpty: true
+        notEmpty: true
       }
     },
     isActive: {
@@ -39,7 +39,7 @@ const User = sequelize.define(
       allowNull: false,
       defaultValue: true,
       validate: {
-        nonEmpty: true
+        notEmpty: true
       }
     }
   },
