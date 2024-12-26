@@ -30,7 +30,7 @@ exports.addItemToPipeline = async (req, res, next) => {
         { transaction: t }
       );
 
-      // redisClient.set(newItemInPipeline.itemId, JSON.stringify())
+      // todo: run worked to fetch data for this item and add to cache
 
       return newItemInPipeline;
     });
@@ -49,7 +49,11 @@ exports.addItemToPipeline = async (req, res, next) => {
 
 exports.deleteItemFromPipeline = async (req, res, next) => {
   try {
-    GoogleSheetsPipeline.destroy({ where: { itemId: req.params.itemId } });
+    await GoogleSheetsPipeline.destroy({
+      where: { itemId: req.params.itemId }
+    });
+
+    await redisClient.del(req.params.itemId);
 
     res.status(204).json({
       status: true,
