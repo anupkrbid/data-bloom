@@ -1,7 +1,11 @@
 require('dotenv').config();
 
 const { sequelize } = require('./sequelize/config');
-const { connectRedisClient, redisClient } = require('./redis');
+const {
+  redisClient,
+  connectRedisClient,
+  disconnectRedisClient
+} = require('./redis');
 const { cronJobs } = require('./cron-jobs');
 const app = require('./app');
 
@@ -21,7 +25,7 @@ const app = require('./app');
     console.error('Failed to start the application:', error);
     await cronJobs.stop();
     await sequelize.close();
-    await redisClient.disconnect();
+    await disconnectRedisClient();
     process.exit(1);
   }
 })();

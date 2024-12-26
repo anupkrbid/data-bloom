@@ -1,6 +1,6 @@
 const { sequelize } = require('../../../sequelize/config');
 const { GoogleSheetsPipeline } = require('../../../sequelize/models');
-const { redisClient } = require('../../../redis');
+const { redisClient, disconnectRedisClient } = require('../../../redis');
 const { ResponseError } = require('../../../utils');
 
 exports.getAllItemsInPipeline = async (req, res, next) => {
@@ -30,12 +30,22 @@ exports.addItemToPipeline = async (req, res, next) => {
         { transaction: t }
       );
 
-      // todo: run worked to fetch data for this item and add to cache
+      // todo: manually start a worker theread
+
+      // add task to cronjob that will run immediately
+      // await cronJobs.add({
+      //   name: `google-sheets-data-extraction-${itemId}`,
+      //   worker: {
+      //     workerData: {
+      //       itemId: itemId
+      //     }
+      //   }
+      // });
 
       return newItemInPipeline;
     });
 
-    res.status(201).json({
+    res.status(202).json({
       status: true,
       message: 'Item added to pipeline',
       data: {

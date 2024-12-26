@@ -1,56 +1,71 @@
-const { isMainThread, parentPort } = require('worker_threads');
-const { google } = require('googleapis');
+const { isMainThread, parentPort, workerData } = require('worker_threads');
 const { GoogleSheetsReader } = require('./google-sheets-reader');
-const path = require('path');
+const {
+  redisClient,
+  connectRedisClient,
+  disconnectRedisClient
+} = require('../../redis');
 
 const { GoogleSheetsPipeline } = require('../../sequelize/models');
+const { isDefinedAndNotNull } = require('../../utils');
 
-console.log('Data extraction running, isMainThread', isMainThread);
+if (!isMainThread) {
+  console.log('Google Sheets Data Extraction Worker Running on Worker Thread');
+  (async () => {
+    let spreadsheetIds = [];
 
-(async () => {
-  const pipelineItemIds = await GoogleSheetsPipeline.findAll({
-    attributes: ['itemId']
-  }).then((data) => data.map((d) => d.itemId));
+    console.log('workerData', workerData.itemId);
 
-  console.log(pipelineItemIds);
+    if (isDefinedAndNotNull(workerData.itemId)) {
+      spreadsheetIds.push(workerData.itemId);
+    } else {
+      spreadsheetIds = await GoogleSheetsPipeline.findAll({
+        attributes: ['itemId']
+      }).then((data) => data.map((d) => d.itemId));
+    }
 
-  const base64EncodedServiceAccount =
-    process.env.BASE64_ENCODED_GOOGLE_SERVICE_ACCOUNT;
-  const decodedServiceAccount = Buffer.from(
-    base64EncodedServiceAccount,
-    'base64'
-  ).toString('utf-8');
-  const credentials = JSON.parse(decodedServiceAccount);
+    if (!process.env.BASE64_ENCODED_GOOGLE_SERVICE_ACCOUNT) {
+      throw new Error(
+        'BASE64_ENCODED_GOOGLE_SERVICE_ACCOUNT environment variable is not set'
+      );
+    }
 
-  console.log(credentials);
+    const decodedServiceAccount = Buffer.from(
+      process.env.BASE64_ENCODED_GOOGLE_SERVICE_ACCOUNT,
+      'base64'
+    ).toString('utf-8');
+    const credentials = JSON.parse(decodedServiceAccount);
 
-  if (!credentials) {
-    throw new Error(
-      'GOOGLE_SHEETS_CREDENTIALS environment variable is not set'
-    );
-  }
+    const reader = new GoogleSheetsReader(credentials);
+    await reader.initialize();
 
-  const reader = new GoogleSheetsReader(credentials);
-  await reader.initialize();
+    console.log('spreadsheetIds', spreadsheetIds);
 
-  const spreadsheetId = [pipelineItemIds[0]];
+    if (!redisClient.isOpen) {
+      console.error('Redis client is closed. Reconnecting...');
+      await connectRedisClient();
+    }
 
-  // // Read all sheets
-  const allSheetsData = await reader.readSheet(spreadsheetId);
-  console.log('All sheets data:', allSheetsData);
+    for await (const spreadsheetId of spreadsheetIds) {
+      const data = await reader.readSheet(spreadsheetId);
 
-  console.log('extractedData', JSON.parse(extractedData));
+      await redisClient.set(spreadsheetId, JSON.stringify(data));
+    }
 
-  res.send('Successfully submitted! Thank you!');
+    await disconnectRedisClient();
 
-  // signal to parent that the job is done
-  if (parentPort) {
-    parentPort.postMessage('done');
-  } else {
-    process.exit(0);
-  }
-})();
+    console.log('Data Added to Redis');
 
+    // signal to parent that the job is done
+    if (parentPort) {
+      parentPort.postMessage('done');
+    } else {
+      process.exit(0);
+    }
+  })();
+} else {
+  console.log('Google Sheets Data Extraction Worker Running on Main Thread');
+}
 // function cancel() {
 //   // do cleanup here
 //   // (if you're using @ladjs/graceful, the max time this can run by default is 5s)

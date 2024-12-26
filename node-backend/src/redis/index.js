@@ -16,4 +16,8 @@ async function connectRedisClient() {
     .connect();
 }
 
-module.exports = { redisClient, connectRedisClient };
+async function disconnectRedisClient() {
+  await redisClient.disconnect();
+}
+
+module.exports = { redisClient, connectRedisClient, disconnectRedisClient };
