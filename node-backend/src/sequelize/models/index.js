@@ -4,11 +4,13 @@
 
 const User = require('./user');
 const Session = require('./session');
+const GoogleSheetsPipeline = require('./google-sheets-pipeline');
 
 User.hasMany(Session);
 Session.belongsTo(User, { onDelete: 'CASCADE' });
 
 module.exports = {
   User,
-  Session
+  Session,
+  GoogleSheetsPipeline
 };

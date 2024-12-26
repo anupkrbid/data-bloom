@@ -8,7 +8,7 @@ const {
   corsMiddleware
 } = require('./global-middlewares');
 
-const { authRoutes } = require('./api/v1/routes');
+const { authRoutes, googleSheetsPipelineRoutes } = require('./api/v1/routes');
 
 const app = express();
 
@@ -26,7 +26,7 @@ app.get('/', (req, res, next) => {
 });
 
 app.use('/api/v1/auth', authRoutes);
-// app.use('/api/v1/users', UserRoutes);
+app.use('/api/v1/google-sheets-pipelines', googleSheetsPipelineRoutes);
 
 app.use(badRequestMiddleware);
 app.use(anyErrorMiddleware);
