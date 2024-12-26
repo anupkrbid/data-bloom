@@ -134,3 +134,6 @@ dist
 
 # file uploads
 uploads/
+
+# Redis
+dump.rdb

@@ -1,14 +1,12 @@
 require('dotenv').config();
 
 const { sequelize } = require('./sequelize/config');
+const { connectRedisClient, redisClient } = require('./redis');
 const app = require('./app');
 
 (async () => {
   try {
-    // await sequelize.authenticate();
-
-    // console.log('Database authenticated successfully.');
-
+    await connectRedisClient();
     await sequelize.sync();
 
     console.log('Database connected successfully.');
@@ -19,6 +17,7 @@ const app = require('./app');
   } catch (error) {
     console.error('Failed to start the application:', error);
     await sequelize.close();
+    await redisClient.disconnect();
     process.exit(1);
   }
 })();
