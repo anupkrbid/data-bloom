@@ -6,8 +6,8 @@ const bree = new Bree({
   root: path.resolve(__dirname, 'jobs'),
   jobs: [
     {
-      name: 'google-sheets-data-extraction'
-      //   interval: '10s'
+      name: 'google-sheets-data-extraction.worker',
+      interval: '12h'
     }
   ],
   errorHandler: (error, workerMetadata) => {

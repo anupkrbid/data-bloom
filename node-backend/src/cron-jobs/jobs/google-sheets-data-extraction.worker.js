@@ -10,6 +10,20 @@ const { GoogleSheetsPipeline } = require('../../sequelize/models');
 const { isDefinedAndNotNull } = require('../../utils');
 
 if (!isMainThread) {
+  process.on('uncaughtException', (err, origin) => {
+    console.log('Google Sheets Data Extraction Worker: uncaughtException', err);
+
+    cancel();
+  });
+
+  process.on('unhandledRejection', (reason, promise) => {
+    console.log(
+      '========================== unhandledRejection ========================= unhandledRejection =========================\n',
+      err
+    );
+    cancel();
+  });
+
   console.log('Google Sheets Data Extraction Worker Running on Worker Thread');
   (async () => {
     let spreadsheetIds = [];
@@ -66,16 +80,16 @@ if (!isMainThread) {
 } else {
   console.log('Google Sheets Data Extraction Worker Running on Main Thread');
 }
-// function cancel() {
-//   // do cleanup here
-//   // (if you're using @ladjs/graceful, the max time this can run by default is 5s)
+function cancel() {
+  // do cleanup here
+  // (if you're using @ladjs/graceful, the max time this can run by default is 5s)
 
-//   // send a message to the parent that we're ready to terminate
-//   // (you could do `process.exit(0)` or `process.exit(1)` instead if desired
-//   // but this is a bit of a cleaner approach for worker termination
-//   if (parentPort) {
-//     parentPort.postMessage('cancelled');
-//   } else {
-//     process.exit(0);
-//   }
-// }
+  // send a message to the parent that we're ready to terminate
+  // (you could do `process.exit(0)` or `process.exit(1)` instead if desired
+  // but this is a bit of a cleaner approach for worker termination
+  if (parentPort) {
+    parentPort.postMessage('cancelled');
+  } else {
+    process.exit(0);
+  }
+}

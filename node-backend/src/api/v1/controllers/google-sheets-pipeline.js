@@ -1,7 +1,8 @@
 const { sequelize } = require('../../../sequelize/config');
 const { GoogleSheetsPipeline } = require('../../../sequelize/models');
-const { redisClient, disconnectRedisClient } = require('../../../redis');
+const { redisClient } = require('../../../redis');
 const { ResponseError } = require('../../../utils');
+const { fork } = require('child_process');
 
 exports.getAllItemsInPipeline = async (req, res, next) => {
   try {
