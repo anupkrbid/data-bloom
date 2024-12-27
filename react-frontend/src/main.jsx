@@ -7,20 +7,13 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { CssBaseline } from '@mui/material';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-
-const theme = createTheme({
-  colorSchemes: {
-    light: true,
-    dark: false
-  }
-});
+import { AppTheme } from './components/features';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
+    <AppTheme>
       <CssBaseline enableColorScheme />
       <App />
-    </ThemeProvider>
+    </AppTheme>
   </StrictMode>
 );

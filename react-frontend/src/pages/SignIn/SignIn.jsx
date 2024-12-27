@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
-import ForgotPassword from '../../components';
+import { ForgotPassword } from '../../components';
 // import AppTheme from './theme/AppTheme';
 
 const Card = styled(MuiCard)(({ theme }) => ({
