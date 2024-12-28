@@ -7,7 +7,7 @@ const bree = new Bree({
   jobs: [
     {
       name: 'google-sheets-data-extraction.worker',
-      interval: '5m'
+      interval: '1h'
     }
   ],
   errorHandler: (error, workerMetadata) => {
