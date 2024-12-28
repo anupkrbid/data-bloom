@@ -14,6 +14,7 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { ForgotPassword } from '../../components';
 import AppNavbar from '../../layouts/AppNavBar/AppNavBar';
+import {Link as ReactRouterLink} from "react-router-dom"
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -112,7 +113,6 @@ export default function SignIn() {
   };
 
   return (
-    // <AppTheme {...props}>
     <SignInContainer direction="column" justifyContent="space-between">
       <AppNavbar />
       <Card variant="outlined">
@@ -196,7 +196,8 @@ export default function SignIn() {
           <Typography sx={{ textAlign: 'center' }}>
             Don&apos;t have an account?{' '}
             <Link
-              href="/material-ui/getting-started/templates/sign-in/"
+              component={ReactRouterLink}
+              to="/sign-up"
               variant="body2"
               sx={{ alignSelf: 'center' }}
             >
@@ -206,6 +207,5 @@ export default function SignIn() {
         </Box>
       </Card>
     </SignInContainer>
-    // </AppTheme>
   );
 }

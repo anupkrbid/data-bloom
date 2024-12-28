@@ -13,6 +13,7 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import AppNavbar from "../../layouts/AppNavBar/AppNavBar" 
+import {Link as ReactRouterLink} from "react-router-dom"
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -197,7 +198,8 @@ export default function SignUp() {
             <Typography sx={{ textAlign: 'center' }}>
               Already have an account?{' '}
               <Link
-                href="/material-ui/getting-started/templates/sign-in/"
+                component={ReactRouterLink}
+                to="/sign-in"
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
               >
@@ -210,9 +212,3 @@ export default function SignUp() {
     </>
   );
 }
-
-// function SignUp() {
-//   return <h1>SignUp Component</h1>;
-// }
-
-// export default SignUp;

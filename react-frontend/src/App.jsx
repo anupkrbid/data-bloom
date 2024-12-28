@@ -1,5 +1,5 @@
 import './App.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 
 import { Dashboard, dashboardLoader, SignIn, SignUp } from './pages';
 import { RootLayout } from './components';
@@ -13,8 +13,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        path: '',
-        element: <SignIn />
+        element: <Navigate to="/sign-in" replace />
       },
       {
         path: 'sign-up',
