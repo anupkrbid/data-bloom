@@ -8,6 +8,8 @@ import { tabsClasses } from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import ColorModeIconDropdown from "../../components/features/AppTheme/ColorModeIconDropdown/ColorModeIconDropdown";
+import IconButton from '@mui/material/IconButton';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 
 const Toolbar = styled(MuiToolbar)({
   width: '100%',
@@ -30,7 +32,7 @@ export default function AppNavBar() {
     <AppBar
       position="fixed"
       sx={{
-        display: { xs: 'auto', md: 'none' },
+        display: 'auto',
         boxShadow: 0,
         bgcolor: 'background.paper',
         backgroundImage: 'none',
@@ -56,14 +58,20 @@ export default function AppNavBar() {
           >
             <CustomIcon />
             <Typography variant="h4" component="h1" sx={{ color: 'text.primary' }}>
-              Dashboard
+              Data Bloom
             </Typography>
           </Stack>
+
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{ justifyContent: 'center', ml: 'auto' }}
+          >
           <ColorModeIconDropdown />
-          {/* <MenuButton aria-label="menu" onClick={toggleDrawer(true)}>
-            <MenuRoundedIcon />
-          </MenuButton>
-          <SideMenuMobile open={open} toggleDrawer={toggleDrawer} /> */}
+          <IconButton size="small" >
+            <LogoutRoundedIcon />
+          </IconButton>
+          </Stack>
         </Stack>
       </Toolbar>
     </AppBar>

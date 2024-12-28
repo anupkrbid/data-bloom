@@ -11,7 +11,6 @@ export default function Dashboard() {
   return (
       <Box sx={{ display: 'flex' }}>
         <AppNavbar />
-        {/* Main content */}
         <Box
           component="main"
           sx={(theme) => ({
@@ -28,7 +27,7 @@ export default function Dashboard() {
               alignItems: 'center',
               mx: 3,
               pb: 5,
-              mt: { xs: 8, md: 0 },
+              mt: 8,
             }}
           >
             <Header />
