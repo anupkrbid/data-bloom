@@ -29,22 +29,25 @@ class GoogleSheetsReader {
         spreadsheetId
       });
 
-      return response.data.sheets.map((sheet) => ({
-        sheetId: sheet.properties.sheetId,
-        title: sheet.properties.title,
-        gridProperties: sheet.properties.gridProperties
-      }));
+      return {
+        fileName: response.data.properties.title,
+        sheets: response.data.sheets.map((sheet) => ({
+          sheetId: sheet.properties.sheetId,
+          title: sheet.properties.title,
+          gridProperties: sheet.properties.gridProperties
+        }))
+      };
     } catch (error) {
       throw new Error(`Failed to get sheet metadata: ${error.message}`);
     }
   }
 
-  async getSheetDimensions(spreadsheetId, sheetTitle) {
+  async getSheetDimensions(spreadsheetId, sheetNo) {
     try {
       // Get the data range for the specified sheet
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: sheetTitle
+        range: sheetNo
       });
 
       const values = response.data.values || [];
@@ -74,25 +77,30 @@ class GoogleSheetsReader {
     return letter;
   }
 
-  async readSheet(spreadsheetId, sheetTitle = null) {
+  async readSheet(spreadsheetId, sheetNo = null) {
     try {
       // If no sheet title is provided, get all sheets
-      const sheets = await this.getSheetMetadata(spreadsheetId);
+      const metadata = await this.getSheetMetadata(spreadsheetId);
+      const sheets = metadata.sheets;
 
       if (sheets.length === 0) {
         throw new Error('No sheets found in the spreadsheet');
       }
 
       // If no specific sheet is requested, process all sheets
-      const sheetsToProcess = sheetTitle
-        ? [sheets.find((s) => s.title === sheetTitle)]
+      const sheetsToProcess = sheetNo
+        ? [sheets.find((s) => s.title === sheetNo)]
         : sheets;
 
-      if (sheetTitle && !sheetsToProcess[0]) {
-        throw new Error(`Sheet "${sheetTitle}" not found`);
+      if (sheetNo && !sheetsToProcess[0]) {
+        throw new Error(`Sheet "${sheetNo}" not found`);
       }
 
-      const result = {};
+      const result = {
+        spreadsheetId,
+        fileName: metadata.fileName, // Add this line
+        sheets: {}
+      };
 
       // Process each sheet
       for (const sheet of sheetsToProcess) {
@@ -113,7 +121,7 @@ class GoogleSheetsReader {
 
         const values = response.data.values || [];
         if (values.length === 0) {
-          result[sheet.title] = [];
+          result.sheets[sheet.title] = [];
           continue;
         }
 
@@ -130,11 +138,11 @@ class GoogleSheetsReader {
           return obj;
         });
 
-        result[sheet.title] = jsonData;
+        result.sheets[sheet.title] = jsonData;
       }
 
       // If a specific sheet was requested, return just that sheet's data
-      return sheetTitle ? result[sheetTitle] : result;
+      return result;
     } catch (error) {
       throw new Error(`Failed to read sheet: ${error.message}`);
     }
