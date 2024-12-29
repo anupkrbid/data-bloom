@@ -1,12 +1,12 @@
 import { useRouteError } from 'react-router-dom';
-import { Header } from '../../components';
+import { AppNavBar } from '../components/common';
 
 function ErrorPage() {
   const error = useRouteError();
 
   return (
     <>
-      <Header />
+      <AppNavBar />
       <h1>Error Page</h1>
       <p>
         {error.data.message} - {error.status}

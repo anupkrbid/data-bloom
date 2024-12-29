@@ -5,9 +5,15 @@ import {
   Navigate
 } from 'react-router-dom';
 
-import { Dashboard, dashboardLoader, SignIn, SignUp } from './pages';
-import { RootLayout } from './components';
-import ErrorPage from './pages/ErrorPage/ErrorPage';
+import {
+  DashboardPage,
+  dashboardPageLoader,
+  SignInPage,
+  SignUpPage,
+  ErrorPage
+} from './pages';
+
+import { RootLayout } from './layouts';
 
 const router = createBrowserRouter([
   {
@@ -21,16 +27,16 @@ const router = createBrowserRouter([
       },
       {
         path: 'sign-up',
-        element: <SignUp />
+        element: <SignUpPage />
       },
       {
         path: 'sign-in',
-        element: <SignIn />
+        element: <SignInPage />
       },
       {
         path: 'dashboard',
-        element: <Dashboard />,
-        loader: dashboardLoader
+        element: <DashboardPage />,
+        loader: dashboardPageLoader
       }
     ]
   }

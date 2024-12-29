@@ -1,6 +1,12 @@
-import SignIn from './SignIn/SignIn';
-import SignUp from './SignUp/SignUp';
-import ErrorPage from './ErrorPage/ErrorPage';
-import Dashboard, { loader as dashboardLoader } from './Dashboard/Dashboard';
+import SignInPage from './SignInPage';
+import SignUpPage from './SignUpPage';
+import ErrorPage from './ErrorPage';
+import DashboardPage, { loader as dashboardPageLoader } from './DashboardPage';
 
-export { SignIn, SignUp, ErrorPage, Dashboard, dashboardLoader };
+export {
+  SignInPage,
+  SignUpPage,
+  ErrorPage,
+  DashboardPage,
+  dashboardPageLoader
+};

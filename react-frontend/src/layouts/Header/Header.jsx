@@ -1,7 +1,6 @@
-import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import CustomDatePicker from '../../components/common/CustomDataPicker/CustomDataPicker';
-import ColorModeIconDropdown from '../../components/features/AppTheme/ColorModeIconDropdown/ColorModeIconDropdown';
+import ColorModeIconDropdown from '../../components/common/ColorModeIconDropdown';
 
 export default function Header() {
   return (
@@ -13,7 +12,7 @@ export default function Header() {
         alignItems: { xs: 'flex-start', md: 'center' },
         justifyContent: 'space-between',
         maxWidth: { sm: '100%', md: '1700px' },
-        pt: 1.5,
+        pt: 1.5
       }}
       spacing={2}
     >

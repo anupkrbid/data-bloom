@@ -1,7 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import classes from './Header.module.css';
 
-function Header() {
+function OldHeader() {
   const navigate = useNavigate();
 
   return (
@@ -12,7 +11,7 @@ function Header() {
             <li>
               <NavLink
                 to="/sign-in"
-                className={({ isActive }) => (isActive ? classes.active : '')}
+                className={({ isActive }) => (isActive ? 'active' : '')}
               >
                 Sign In
               </NavLink>
@@ -20,7 +19,7 @@ function Header() {
             <li>
               <NavLink
                 to="/sign-up"
-                className={({ isActive }) => (isActive ? classes.active : '')}
+                className={({ isActive }) => (isActive ? 'active' : '')}
               >
                 Sign Up
               </NavLink>
@@ -33,4 +32,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default OldHeader;

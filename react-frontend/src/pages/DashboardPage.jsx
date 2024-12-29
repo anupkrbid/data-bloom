@@ -1,40 +1,34 @@
-import * as React from 'react';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import AppNavbar from '../../layouts/AppNavBar/AppNavBar';
-import Header from '../../layouts/Header/Header';
-import MainGrid from '../../components/features/Dashboard/MainGrid/MainGrid';
-import { MuiFlexContainer } from '../../components/common';
+import Header from '../layouts/Header/Header';
+import MainGrid from '../components/features/Dashboard/MainGrid/MainGrid';
 
-export default function Dashboard() {
+export default function DashboardPage() {
   return (
-    <MuiFlexContainer direction="column">
-      <AppNavbar />
-      <Box
-        component="main"
-        sx={(theme) => ({
-          flexGrow: 1,
-          backgroundColor: theme.vars
-            ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
-            : alpha(theme.palette.background.default, 1),
-          overflow: 'auto'
-        })}
+    <Box
+      component="main"
+      sx={(theme) => ({
+        flexGrow: 1,
+        backgroundColor: theme.vars
+          ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
+          : alpha(theme.palette.background.default, 1),
+        overflow: 'auto'
+      })}
+    >
+      <Stack
+        spacing={2}
+        sx={{
+          alignItems: 'center',
+          mx: 3,
+          pb: 5,
+          mt: 8
+        }}
       >
-        <Stack
-          spacing={2}
-          sx={{
-            alignItems: 'center',
-            mx: 3,
-            pb: 5,
-            mt: 8
-          }}
-        >
-          <Header />
-          <MainGrid />
-        </Stack>
-      </Box>
-    </MuiFlexContainer>
+        <Header />
+        <MainGrid />
+      </Stack>
+    </Box>
   );
 }
 

@@ -1,9 +1,10 @@
 import { AppBar, Box, Stack, Typography } from '@mui/material';
-import { MuiToolbar } from '../../components/common';
+
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
-import ColorModeIconDropdown from '../../components/features/AppTheme/ColorModeIconDropdown/ColorModeIconDropdown';
 import IconButton from '@mui/material/IconButton';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import { MuiToolbar } from './MuiToolbar';
+import ColorModeIconDropdown from './ColorModeIconDropdown';
 
 export default function AppNavBar() {
   return (
