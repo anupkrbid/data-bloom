@@ -7,7 +7,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
 
-export default function ForgotPassword({ open, handleClose }) {
+export default function ForgotPasswordModal({ open, handleClose }) {
   return (
     <Dialog
       open={open}
@@ -21,7 +21,7 @@ export default function ForgotPassword({ open, handleClose }) {
         sx: { backgroundImage: 'none' }
       }}
     >
-      <DialogTitle>Reset password</DialogTitle>
+      <DialogTitle>Forgot password</DialogTitle>
       <DialogContent
         sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}
       >
@@ -51,7 +51,7 @@ export default function ForgotPassword({ open, handleClose }) {
   );
 }
 
-ForgotPassword.propTypes = {
+ForgotPasswordModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired
 };

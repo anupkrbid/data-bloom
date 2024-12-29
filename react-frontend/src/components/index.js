@@ -1,4 +1,4 @@
 import Header from './Old-Header/Old-Header';
-import ForgotPassword from './ForgotPassword/ForgotPassword';
+import ForgotPasswordModal from './features/Auth/ForgotPasswordModal';
 
-export { Header, ForgotPassword };
+export { Header, ForgotPasswordModal };

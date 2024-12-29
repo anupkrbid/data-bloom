@@ -1,67 +1,96 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
+// import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
-import FormControl from '@mui/material/FormControl';
+// import FormControlLabel from '@mui/material/FormControlLabel';
 import Link from '@mui/material/Link';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { Link as ReactRouterLink } from 'react-router-dom';
-import { MuiCard } from '../components/common';
+import { MuiCard, TextFormControl } from '../components/common';
+import { useTextFormControl } from '../hooks';
+import { isEmpty, isEmail, isLength, equals } from 'validator';
 
 export default function SignUp() {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [nameError, setNameError] = React.useState(false);
-  const [nameErrorMessage, setNameErrorMessage] = React.useState('');
+  const {
+    value: nameInputValue,
+    hasError: nameInputHasError,
+    errorMessage: nameInputErrorMessage,
+    onValueChange: handleNameInputChange,
+    onValueChangeEnd: handleNameInputBlur
+  } = useTextFormControl('', (value) => {
+    if (isEmpty(value)) {
+      return 'Name is required';
+    }
+    return '';
+  });
 
-  const validateInputs = () => {
-    const email = document.getElementById('email');
-    const password = document.getElementById('password');
-    const name = document.getElementById('name');
-
-    let isValid = true;
-
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage('');
+  const {
+    value: emailInputValue,
+    hasError: emailInputHasError,
+    errorMessage: emailInputErrorMessage,
+    onValueChange: handleEmailInputChange,
+    onValueChangeEnd: handleEmailInputBlur
+  } = useTextFormControl('', (value) => {
+    if (isEmpty(value)) {
+      return 'Email is required';
     }
 
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage('');
+    if (!isEmail(value)) {
+      return 'Not a valid email';
     }
 
-    if (!name.value || name.value.length < 1) {
-      setNameError(true);
-      setNameErrorMessage('Name is required.');
-      isValid = false;
-    } else {
-      setNameError(false);
-      setNameErrorMessage('');
+    return '';
+  });
+
+  const {
+    value: passwordInputValue,
+    hasError: passwordInputHasError,
+    errorMessage: passwordInputErrorMessage,
+    onValueChange: handlePasswordInputChange,
+    onValueChangeEnd: handlePasswordInputBlur
+  } = useTextFormControl('', (value) => {
+    if (isEmpty(value)) {
+      return 'Password is required';
     }
 
-    return isValid;
-  };
+    if (!isLength(value, { min: 8 })) {
+      return 'Password should be minimum 8 char long';
+    }
+
+    return '';
+  });
+
+  const {
+    value: confirmPasswordInputValue,
+    hasError: confirmPasswordInputHasError,
+    errorMessage: confirmPasswordInputErrorMessage,
+    onValueChange: handleConfirmPasswordInputChange,
+    onValueChangeEnd: handleConfirmPasswordInputBlur
+  } = useTextFormControl('', (value) => {
+    if (!equals(value, passwordInputValue)) {
+      return 'Show match the password field';
+    }
+
+    return '';
+  });
+
+  // const isFormInvalid =
+  //   nameInputHasError ||
+  //   emailInputHasError ||
+  //   passwordInputHasError ||
+  //   confirmPasswordInputHasError;
 
   const handleSubmit = (event) => {
-    if (nameError || emailError || passwordError) {
+    if (
+      nameInputHasError ||
+      emailInputHasError ||
+      passwordInputHasError ||
+      confirmPasswordInputHasError
+    ) {
       event.preventDefault();
       return;
     }
+
     const data = new FormData(event.currentTarget);
     console.log({
       name: data.get('name'),
@@ -86,61 +115,72 @@ export default function SignUp() {
           onSubmit={handleSubmit}
           sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
         >
-          <FormControl>
-            <FormLabel htmlFor="name">Full name</FormLabel>
-            <TextField
-              autoComplete="name"
-              name="name"
-              required
-              fullWidth
-              id="name"
-              placeholder="Jon Snow"
-              error={nameError}
-              helperText={nameErrorMessage}
-              color={nameError ? 'error' : 'primary'}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel htmlFor="email">Email</FormLabel>
-            <TextField
-              required
-              fullWidth
-              id="email"
-              placeholder="your@email.com"
-              name="email"
-              autoComplete="email"
-              variant="outlined"
-              error={emailError}
-              helperText={emailErrorMessage}
-              color={passwordError ? 'error' : 'primary'}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel htmlFor="password">Password</FormLabel>
-            <TextField
-              required
-              fullWidth
-              name="password"
-              placeholder="••••••"
-              type="password"
-              id="password"
-              autoComplete="new-password"
-              variant="outlined"
-              error={passwordError}
-              helperText={passwordErrorMessage}
-              color={passwordError ? 'error' : 'primary'}
-            />
-          </FormControl>
-          <FormControlLabel
+          <TextFormControl
+            id="name"
+            label="Full Name"
+            name="name"
+            fullWidth={true}
+            autoComplete="name"
+            placeholder="Jon Snow"
+            error={nameInputHasError}
+            color={nameInputHasError ? 'error' : 'primary'}
+            helperText={nameInputErrorMessage}
+            value={nameInputValue}
+            onChange={handleNameInputChange}
+            onBlur={handleNameInputBlur}
+          />
+
+          <TextFormControl
+            id="email"
+            label="Email"
+            name="name"
+            fullWidth={true}
+            autoComplete="email"
+            placeholder="your@email.com"
+            error={emailInputHasError}
+            color={emailInputHasError ? 'error' : 'primary'}
+            helperText={emailInputErrorMessage}
+            value={emailInputValue}
+            onChange={handleEmailInputChange}
+            onBlur={handleEmailInputBlur}
+          />
+
+          <TextFormControl
+            id="password"
+            label="Password"
+            name="password"
+            fullWidth={true}
+            autoComplete="password"
+            placeholder="••••••"
+            error={passwordInputHasError}
+            color={passwordInputHasError ? 'error' : 'primary'}
+            helperText={passwordInputErrorMessage}
+            value={passwordInputValue}
+            onChange={handlePasswordInputChange}
+            onBlur={handlePasswordInputBlur}
+          />
+
+          <TextFormControl
+            id="confirm-password"
+            label="Confirm Password"
+            name="confirmPassword"
+            fullWidth={true}
+            autoComplete="confirmPassword"
+            placeholder="••••••"
+            error={confirmPasswordInputHasError}
+            color={confirmPasswordInputHasError ? 'error' : 'primary'}
+            helperText={confirmPasswordInputErrorMessage}
+            value={confirmPasswordInputValue}
+            onChange={handleConfirmPasswordInputChange}
+            onBlur={handleConfirmPasswordInputBlur}
+          />
+
+          {/* <FormControlLabel
             control={<Checkbox value="allowExtraEmails" color="primary" />}
             label="I want to receive updates via email."
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            onClick={validateInputs}
-          >
+          /> */}
+
+          <Button type="submit" fullWidth variant="contained">
             Sign up
           </Button>
         </Box>
