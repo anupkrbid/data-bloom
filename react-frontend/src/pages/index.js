@@ -1,5 +1,5 @@
 import SignInPage, { action as signInPageAction } from './SignInPage';
-import SignUpPage from './SignUpPage';
+import SignUpPage, { action as signUpPageAction } from './SignUpPage';
 import ErrorPage from './ErrorPage';
 import DashboardPage, { loader as dashboardPageLoader } from './DashboardPage';
 
@@ -9,5 +9,6 @@ export {
   ErrorPage,
   DashboardPage,
   dashboardPageLoader,
-  signInPageAction
+  signInPageAction,
+  signUpPageAction
 };

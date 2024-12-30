@@ -12,7 +12,8 @@ import {
   SignInPage,
   SignUpPage,
   ErrorPage,
-  signInPageAction
+  signInPageAction,
+  signUpPageAction
 } from './pages';
 
 import { RootLayout } from './layouts';
@@ -29,7 +30,8 @@ const router = createBrowserRouter([
       },
       {
         path: 'sign-up',
-        element: <SignUpPage />
+        element: <SignUpPage />,
+        action: signUpPageAction
       },
       {
         path: 'sign-in',

@@ -5,12 +5,36 @@ import Divider from '@mui/material/Divider';
 // import FormControlLabel from '@mui/material/FormControlLabel';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-import { Link as ReactRouterLink } from 'react-router-dom';
+import {
+  Link as ReactRouterLink,
+  redirect,
+  useActionData,
+  useSubmit
+} from 'react-router-dom';
 import { MuiCard, TextFormControl } from '../components/common';
 import { useTextFormControl } from '../hooks';
 import { isEmpty, isEmail, isLength, equals } from 'validator';
+import axiosInstance from '../configs/axios';
+import { useSnackbar } from 'notistack';
+import { useEffect } from 'react';
+import { isDefinedAndNotNull } from '../utils';
 
 export default function SignUp() {
+  const { enqueueSnackbar } = useSnackbar();
+  const actionError = useActionData();
+  const submit = useSubmit();
+
+  useEffect(() => {
+    if (isDefinedAndNotNull(actionError)) {
+      enqueueSnackbar(actionError.message, { variant: 'error' });
+      if (isDefinedAndNotNull(actionError.error)) {
+        for (const [_, value] of Object.entries(actionError.error)) {
+          enqueueSnackbar(value, { variant: 'error' });
+        }
+      }
+    }
+  }, [actionError, enqueueSnackbar]);
+
   const {
     value: nameInputValue,
     hasError: nameInputHasError,
@@ -74,30 +98,25 @@ export default function SignUp() {
     return '';
   });
 
-  // const isFormInvalid =
-  //   nameInputHasError ||
-  //   emailInputHasError ||
-  //   passwordInputHasError ||
-  //   confirmPasswordInputHasError;
-
   const handleSubmit = (event) => {
+    event.preventDefault();
     if (
       nameInputHasError ||
       emailInputHasError ||
       passwordInputHasError ||
       confirmPasswordInputHasError
     ) {
-      event.preventDefault();
       return;
     }
 
     const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password')
-    });
+    submit(data, { method: 'POST' });
+    // console.log({
+    //   name: data.get('name'),
+    //   lastName: data.get('lastName'),
+    //   email: data.get('email'),
+    //   password: data.get('password')
+    // });
   };
 
   return (
@@ -133,7 +152,7 @@ export default function SignUp() {
           <TextFormControl
             id="email"
             label="Email"
-            name="name"
+            name="email"
             fullWidth={true}
             autoComplete="email"
             placeholder="your@email.com"
@@ -149,6 +168,7 @@ export default function SignUp() {
             id="password"
             label="Password"
             name="password"
+            type="password"
             fullWidth={true}
             autoComplete="password"
             placeholder="••••••"
@@ -164,6 +184,7 @@ export default function SignUp() {
             id="confirm-password"
             label="Confirm Password"
             name="confirmPassword"
+            type="password"
             fullWidth={true}
             autoComplete="confirmPassword"
             placeholder="••••••"
@@ -203,4 +224,25 @@ export default function SignUp() {
       </MuiCard>
     </>
   );
+}
+
+export async function action({ request }) {
+  try {
+    const data = await request.formData();
+
+    const payload = {
+      name: data.get('name'),
+      email: data.get('email'),
+      password: data.get('password')
+    };
+
+    const res = await axiosInstance.request({
+      url: '/v1/auth/sign-up',
+      method: request.method,
+      data: JSON.stringify(payload)
+    });
+    return redirect('/dashboard');
+  } catch (err) {
+    return err.response.data;
+  }
 }

@@ -190,9 +190,6 @@ export async function action({ request }) {
       password: data.get('password')
     };
 
-    console.log(payload);
-
-    // axiosInstance.post();
     const res = await axiosInstance.request({
       url: '/v1/auth/sign-in',
       method: request.method,
