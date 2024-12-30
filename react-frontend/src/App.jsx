@@ -4,13 +4,15 @@ import {
   RouterProvider,
   Navigate
 } from 'react-router-dom';
+import { SnackbarProvider } from 'notistack';
 
 import {
   DashboardPage,
   dashboardPageLoader,
   SignInPage,
   SignUpPage,
-  ErrorPage
+  ErrorPage,
+  signInPageAction
 } from './pages';
 
 import { RootLayout } from './layouts';
@@ -31,7 +33,8 @@ const router = createBrowserRouter([
       },
       {
         path: 'sign-in',
-        element: <SignInPage />
+        element: <SignInPage />,
+        action: signInPageAction
       },
       {
         path: 'dashboard',
@@ -43,5 +46,9 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <RouterProvider router={router}></RouterProvider>;
+  return (
+    <SnackbarProvider maxSnack={3}>
+      <RouterProvider router={router}></RouterProvider>
+    </SnackbarProvider>
+  );
 }

@@ -1,4 +1,4 @@
-import SignInPage from './SignInPage';
+import SignInPage, { action as signInPageAction } from './SignInPage';
 import SignUpPage from './SignUpPage';
 import ErrorPage from './ErrorPage';
 import DashboardPage, { loader as dashboardPageLoader } from './DashboardPage';
@@ -8,5 +8,6 @@ export {
   SignUpPage,
   ErrorPage,
   DashboardPage,
-  dashboardPageLoader
+  dashboardPageLoader,
+  signInPageAction
 };

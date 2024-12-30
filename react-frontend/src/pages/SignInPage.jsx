@@ -7,13 +7,36 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { MuiCard, TextFormControl } from '../components/common';
 // import { ForgotPasswordModal } from '../components';
-import { Link as ReactRouterLink } from 'react-router-dom';
+import {
+  Link as ReactRouterLink,
+  redirect,
+  useActionData,
+  useSubmit
+} from 'react-router-dom';
 import { useTextFormControl } from '../hooks';
 import { isEmail, isEmpty, isLength } from 'validator';
-import { useState } from 'react';
+import axiosInstance from '../configs/axios';
+import { useSnackbar } from 'notistack';
+import { isDefinedAndNotNull } from '../utils';
+import { useEffect } from 'react';
+// import { useState } from 'react';
 
 export default function SignIn() {
   // const [open, setOpen] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+  const actionError = useActionData();
+  const submit = useSubmit();
+
+  useEffect(() => {
+    if (isDefinedAndNotNull(actionError)) {
+      enqueueSnackbar(actionError.message, { variant: 'error' });
+      if (isDefinedAndNotNull(actionError.error)) {
+        for (const [_, value] of Object.entries(actionError.error)) {
+          enqueueSnackbar(value, { variant: 'error' });
+        }
+      }
+    }
+  }, [actionError, enqueueSnackbar]);
 
   const {
     value: emailInputValue,
@@ -60,15 +83,14 @@ export default function SignIn() {
   // };
 
   const handleSubmit = (event) => {
+    event.preventDefault();
+    // debugger;
     if (emailInputHasError || passwordInputHasError) {
-      event.preventDefault();
+      // event.preventDefault();
       return;
     }
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password')
-    });
+    submit(data, { method: 'POST' });
   };
 
   return (
@@ -94,7 +116,7 @@ export default function SignIn() {
         <TextFormControl
           id="email"
           label="Email"
-          name="name"
+          name="email"
           fullWidth={true}
           autoComplete="email"
           placeholder="your@email.com"
@@ -110,6 +132,7 @@ export default function SignIn() {
           id="password"
           label="Password"
           name="password"
+          type="password"
           fullWidth={true}
           autoComplete="password"
           placeholder="••••••"
@@ -156,4 +179,27 @@ export default function SignIn() {
       </Box>
     </MuiCard>
   );
+}
+
+export async function action({ request }) {
+  try {
+    const data = await request.formData();
+
+    const payload = {
+      email: data.get('email'),
+      password: data.get('password')
+    };
+
+    console.log(payload);
+
+    // axiosInstance.post();
+    const res = await axiosInstance.request({
+      url: '/v1/auth/sign-in',
+      method: request.method,
+      data: JSON.stringify(payload)
+    });
+    return redirect('/dashboard');
+  } catch (err) {
+    return err.response.data;
+  }
 }

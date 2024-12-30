@@ -12,7 +12,7 @@ module.exports.anyErrorMiddleware = (err, req, res, next) => {
 
   res.status(status).json({
     status: false,
-    error: err.message,
-    details: err.details ? err.details : status === 500 ? err.stack : null
+    message: err.message,
+    error: err.error ? err.error : status === 500 ? err.stack : null
   });
 };
