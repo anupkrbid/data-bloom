@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 // const jwt = require('jsonwebtoken'); // will be using in future to implement refresh token
 
 const { sequelize } = require('../../../sequelize/config');
@@ -55,8 +54,12 @@ exports.signIn = async (req, res, next) => {
       attributes: { exclude: ['created_at', 'updated_at'] }
     });
 
+    if (!isDefinedAndNotNull(user)) {
+      throw new ResponseError('Invalid account.', 401);
+    }
+
     if (!user.isActive) {
-      throw new ResponseError('Account is inactive.', 401);
+      throw new ResponseError('Inactive account.', 401);
     }
 
     const isMatched = await comparePassword(password, user.passwordHash);
@@ -80,7 +83,7 @@ exports.signIn = async (req, res, next) => {
       }
     });
   } catch (err) {
-    next(new ResponseError(err.message));
+    next(new ResponseError(err.message, err.status));
   }
 };
 
@@ -93,7 +96,7 @@ exports.signOut = async (req, res, next) => {
       data: null
     });
   } catch (err) {
-    next(new ResponseError(err.message));
+    next(new ResponseError(err.message, err.status));
   }
 };
 
@@ -115,7 +118,7 @@ exports.isEmailAvailable = async (req, res, next) => {
       });
     }
   } catch (err) {
-    next(new ResponseError(err.message));
+    next(new ResponseError(err.message, err.status));
   }
 };
 

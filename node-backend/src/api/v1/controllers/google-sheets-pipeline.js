@@ -16,7 +16,7 @@ exports.getAllItemsInPipeline = async (req, res, next) => {
       data: [...result]
     });
   } catch (err) {
-    next(new ResponseError(err.message));
+    next(new ResponseError(err.message, err.status));
   }
 };
 
@@ -53,7 +53,7 @@ exports.addItemToPipeline = async (req, res, next) => {
       }
     });
   } catch (err) {
-    next(new ResponseError(err.message));
+    next(new ResponseError(err.message, err.status));
   }
 };
 
@@ -73,6 +73,6 @@ exports.deleteItemFromPipeline = async (req, res, next) => {
       }
     });
   } catch (err) {
-    next(new ResponseError(err.message));
+    next(new ResponseError(err.message, err.status));
   }
 };

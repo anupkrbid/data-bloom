@@ -8,9 +8,11 @@ module.exports.anyErrorMiddleware = (err, req, res, next) => {
   if (!err.status) {
     console.log('Any Error Middleware:\n', err);
   }
-  res.status(err.status || 500).json({
+  const status = err.status || 500;
+
+  res.status(status).json({
     status: false,
     error: err.message,
-    errorDetails: err.errorDetails ? err.errorDetails : ''
+    details: err.details ? err.details : status === 500 ? err.stack : null
   });
 };
