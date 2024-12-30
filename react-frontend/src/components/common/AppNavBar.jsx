@@ -5,6 +5,8 @@ import IconButton from '@mui/material/IconButton';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { MuiToolbar } from './MuiToolbar';
 import ColorModeIconDropdown from './ColorModeIconDropdown';
+import { Form } from 'react-router-dom';
+import { isAuthenticated } from '../../utils';
 
 export default function AppNavBar() {
   return (
@@ -51,9 +53,14 @@ export default function AppNavBar() {
             sx={{ justifyContent: 'center', ml: 'auto' }}
           >
             <ColorModeIconDropdown />
-            <IconButton size="small">
-              <LogoutRoundedIcon />
-            </IconButton>
+
+            {isAuthenticated() && (
+              <Form action="/sign-out" method="POST">
+                <IconButton type="submit" size="small">
+                  <LogoutRoundedIcon />
+                </IconButton>
+              </Form>
+            )}
           </Stack>
         </Stack>
       </MuiToolbar>

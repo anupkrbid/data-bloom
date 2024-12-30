@@ -17,7 +17,7 @@ import { useTextFormControl } from '../hooks';
 import { isEmail, isEmpty, isLength } from 'validator';
 import axiosInstance from '../configs/axios';
 import { useSnackbar } from 'notistack';
-import { isDefinedAndNotNull } from '../utils';
+import { isDefinedAndNotNull, setAuthData } from '../utils';
 import { useEffect } from 'react';
 // import { useState } from 'react';
 
@@ -84,9 +84,7 @@ export default function SignIn() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // debugger;
     if (emailInputHasError || passwordInputHasError) {
-      // event.preventDefault();
       return;
     }
     const data = new FormData(event.currentTarget);
@@ -195,6 +193,9 @@ export async function action({ request }) {
       method: request.method,
       data: JSON.stringify(payload)
     });
+
+    setAuthData(res.data.data);
+
     return redirect('/dashboard');
   } catch (err) {
     return err.response.data;

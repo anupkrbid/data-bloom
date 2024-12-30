@@ -17,6 +17,8 @@ import {
 } from './pages';
 
 import { RootLayout } from './layouts';
+import { protectedRouteLoader, unprotectedRouteLoader } from './utils';
+import { signOutAction } from './components/features';
 
 const router = createBrowserRouter([
   {
@@ -31,17 +33,24 @@ const router = createBrowserRouter([
       {
         path: 'sign-up',
         element: <SignUpPage />,
-        action: signUpPageAction
+        action: signUpPageAction,
+        loader: unprotectedRouteLoader
       },
       {
         path: 'sign-in',
         element: <SignInPage />,
-        action: signInPageAction
+        action: signInPageAction,
+        loader: unprotectedRouteLoader
       },
       {
         path: 'dashboard',
         element: <DashboardPage />,
         loader: dashboardPageLoader
+      },
+      {
+        path: 'sign-out',
+        loader: protectedRouteLoader,
+        action: signOutAction
       }
     ]
   }

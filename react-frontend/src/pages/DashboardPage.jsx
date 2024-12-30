@@ -3,6 +3,9 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Header from '../layouts/Header/Header';
 import MainGrid from '../components/features/Dashboard/MainGrid/MainGrid';
+import axiosInstance from '../configs/axios';
+import { isAuthenticated } from '../utils';
+import { redirect } from 'react-router-dom';
 
 export default function DashboardPage() {
   return (
@@ -32,46 +35,16 @@ export default function DashboardPage() {
   );
 }
 
-// import { useLoaderData } from 'react-router-dom';
-
-// function Dashboard() {
-//   const loaderData = useLoaderData();
-//   return (
-//     <>
-//       <h1>Dashboard Component</h1>
-//       {JSON.stringify(loaderData)}
-//       {/* {loaderData} */}
-//     </>
-//   );
-// }
-
-// export default Dashboard;
-
 export const loader = async () => {
   try {
-    const res = await fetch(
-      'https://data-bloom-be.onrender.com/api/v1/google-sheets-pipelines'
-    );
-
-    if (!res.ok) {
-      throw new Response(
-        JSON.stringify({ status: false, message: 'something went wrong' }),
-        {
-          status: 500,
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+    if (!isAuthenticated()) {
+      return redirect('/sign-in');
     }
-    return res;
+
+    const res = await axiosInstance.get('v1/google-sheets-pipelines');
+
+    return res.data.data;
   } catch (err) {
-    // throw new Response(JSON.stringify({ status: false, message: err.error }), {
-    //   status: 500,
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   }
-    // });
-    return err;
+    return err.response.data;
   }
 };

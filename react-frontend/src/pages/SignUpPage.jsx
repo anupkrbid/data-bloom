@@ -17,7 +17,7 @@ import { isEmpty, isEmail, isLength, equals } from 'validator';
 import axiosInstance from '../configs/axios';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
-import { isDefinedAndNotNull } from '../utils';
+import { isDefinedAndNotNull, setAuthData } from '../utils';
 
 export default function SignUp() {
   const { enqueueSnackbar } = useSnackbar();
@@ -241,6 +241,9 @@ export async function action({ request }) {
       method: request.method,
       data: JSON.stringify(payload)
     });
+
+    setAuthData(res.data.data);
+
     return redirect('/dashboard');
   } catch (err) {
     return err.response.data;
