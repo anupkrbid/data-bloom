@@ -15,6 +15,8 @@ export default function MainGrid() {
     extractFiltersFromUrl(searchParams)
   );
 
+  const showSesssionChart = isDefinedAndNotNull(searchParams.get('feature'));
+
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
       <Grid
@@ -23,12 +25,14 @@ export default function MainGrid() {
         columns={12}
         sx={{ mb: (theme) => theme.spacing(2) }}
       >
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: showSesssionChart ? 6 : 12 }}>
           <PageViewsBarChart chartData={processedData} />
         </Grid>
-        <Grid size={{ xs: 12, md: 6 }}>
-          <SessionsChart />
-        </Grid>
+        {showSesssionChart && (
+          <Grid size={{ xs: 12, md: 6 }}>
+            <SessionsChart />
+          </Grid>
+        )}
       </Grid>
     </Box>
   );

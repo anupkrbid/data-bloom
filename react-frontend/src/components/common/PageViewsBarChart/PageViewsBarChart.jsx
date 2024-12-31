@@ -4,8 +4,10 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useTheme } from '@mui/material/styles';
+import { useSearchParams } from 'react-router-dom';
 
 export default function PageViewsBarChart({ chartData }) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const theme = useTheme();
   const colorPalette = [
     (theme.vars || theme).palette.primary.dark,
@@ -27,6 +29,14 @@ export default function PageViewsBarChart({ chartData }) {
     { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 }
   );
 
+  function clickHandler(event, barItemIdentifier) {
+    const bar = Object.keys(barChartData)[barItemIdentifier.dataIndex];
+    setSearchParams((prev) => {
+      prev.set('feature', bar);
+      return prev;
+    });
+  }
+
   return (
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
@@ -40,6 +50,7 @@ export default function PageViewsBarChart({ chartData }) {
           layout="horizontal"
           borderRadius={8}
           colors={colorPalette}
+          onItemClick={clickHandler}
           yAxis={[
             {
               scaleType: 'band',
