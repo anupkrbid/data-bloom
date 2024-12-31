@@ -1,17 +1,22 @@
-import * as React from 'react';
 import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import PageViewsBarChart from '../../../common/PageViewsBarChart/PageViewsBarChart';
 import SessionsChart from '../../../common/SessionsChart/SessionsChart';
 
+import { useLoaderData, useSearchParams } from 'react-router-dom';
+import { isDefinedAndNotNull } from '../../../../utils';
 
 export default function MainGrid() {
+  const chartData = useLoaderData();
+  const [searchParams] = useSearchParams();
+
+  const processedData = filterData(
+    chartData,
+    extractFiltersFromUrl(searchParams)
+  );
+
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
-      {/*<Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Overview
-      </Typography>*/}
       <Grid
         container
         spacing={2}
@@ -19,12 +24,65 @@ export default function MainGrid() {
         sx={{ mb: (theme) => theme.spacing(2) }}
       >
         <Grid size={{ xs: 12, md: 6 }}>
-          <SessionsChart />
+          <PageViewsBarChart chartData={processedData} />
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
-          <PageViewsBarChart />
+          <SessionsChart />
         </Grid>
       </Grid>
     </Box>
   );
+}
+
+function extractFiltersFromUrl(searchParams) {
+  const filters = {};
+
+  const age = searchParams.get('age');
+  if (isDefinedAndNotNull(age)) {
+    filters.age = age;
+  }
+  const gender = searchParams.get('gender');
+  if (isDefinedAndNotNull(gender)) {
+    filters.gender = gender;
+  }
+
+  const startDate = searchParams.get('startDate');
+  const endDate = searchParams.get('endDate');
+  if (isDefinedAndNotNull(startDate) && isDefinedAndNotNull(endDate)) {
+    filters.startDate = startDate;
+    filters.endDate = endDate;
+  }
+  return filters;
+}
+
+function filterData(data, filters) {
+  const filteredData = data[0].sheets.Sheet3.filter((item) => {
+    let matchesFilters = true;
+
+    if (filters.age) {
+      matchesFilters = matchesFilters && item.Age === filters.age;
+    }
+
+    if (filters.gender) {
+      matchesFilters = matchesFilters && item.Gender === filters.gender;
+    }
+
+    if (filters.startDate && filters.endDate) {
+      const itemDate = new Date(indianToUSFormat(item.Day));
+      const startDate = new Date(indianToUSFormat(filters.startDate));
+      const endDate = new Date(indianToUSFormat(filters.endDate));
+      matchesFilters =
+        matchesFilters && itemDate >= startDate && itemDate <= endDate;
+    }
+
+    return matchesFilters;
+  });
+
+  return filteredData;
+}
+
+function indianToUSFormat(indianDate) {
+  const [day, month, year] = indianDate.split('/');
+
+  return `${month}/${day}/${year}`;
 }
