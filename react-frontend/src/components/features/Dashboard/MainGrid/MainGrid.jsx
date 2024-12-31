@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
-import PageViewsBarChart from '../../../common/PageViewsBarChart/PageViewsBarChart';
-import SessionsChart from '../../../common/SessionsChart/SessionsChart';
+import PageViewsBarChart from '../../../common/PageViewsBarChart';
+import SessionsChart from '../../../common/SessionsChart';
 
 import { useLoaderData, useSearchParams } from 'react-router-dom';
 import { indianToUSFormat, isDefinedAndNotNull } from '../../../../utils';

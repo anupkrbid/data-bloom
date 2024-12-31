@@ -4,7 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { useSearchParams } from 'react-router-dom';
-import { indianToUSFormat } from '../../../utils';
+import { indianToUSFormat } from '../../utils';
 
 function AreaGradient({ color, id }) {
   return (
