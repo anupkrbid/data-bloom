@@ -4,7 +4,7 @@ import PageViewsBarChart from '../../../common/PageViewsBarChart/PageViewsBarCha
 import SessionsChart from '../../../common/SessionsChart/SessionsChart';
 
 import { useLoaderData, useSearchParams } from 'react-router-dom';
-import { isDefinedAndNotNull } from '../../../../utils';
+import { indianToUSFormat, isDefinedAndNotNull } from '../../../../utils';
 
 export default function MainGrid() {
   const chartData = useLoaderData();
@@ -30,7 +30,7 @@ export default function MainGrid() {
         </Grid>
         {showSesssionChart && (
           <Grid size={{ xs: 12, md: 6 }}>
-            <SessionsChart />
+            <SessionsChart chartData={processedData} />
           </Grid>
         )}
       </Grid>
@@ -83,10 +83,4 @@ function filterData(data, filters) {
   });
 
   return filteredData;
-}
-
-function indianToUSFormat(indianDate) {
-  const [day, month, year] = indianDate.split('/');
-
-  return `${month}/${day}/${year}`;
 }

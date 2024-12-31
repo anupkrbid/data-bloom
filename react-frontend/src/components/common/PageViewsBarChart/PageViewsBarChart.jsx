@@ -1,7 +1,6 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useTheme } from '@mui/material/styles';
 import { useSearchParams } from 'react-router-dom';
@@ -40,12 +39,10 @@ export default function PageViewsBarChart({ chartData }) {
   return (
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
-        <Stack sx={{ justifyContent: 'space-between' }}>
-          <Typography component="h2" variant="subtitle2" gutterBottom>
-            Time Spend on feature views from {chartData[0]?.Day} -{' '}
-            {chartData[chartData.length - 1]?.Day}
-          </Typography>
-        </Stack>
+        <Typography component="h2" variant="subtitle2" gutterBottom>
+          Time Spend on feature views from {chartData[0]?.Day} -{' '}
+          {chartData[chartData.length - 1]?.Day}
+        </Typography>
         <BarChart
           layout="horizontal"
           borderRadius={8}
